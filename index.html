@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>GifTastic</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <button data-animal="Cat">Cat</button>
+    <button data-animal="Dog">Dog</button>
+    <button data-animal="Bird">Bird</button>
+
+    <div id="gifsDisplay"></div>
+
+    <script type="text/javascript">
+
+
+        //on click function so when buttons are clicked gifs show up 
+        $('button').on('click', function () {
+            var animal = $(this).data("animal");
+            // console.log(x);
+            var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=4oXRtl5CmpcDy4GbORHP5OmJZfTqmZRO&limit=9";
+
+            $.ajax({
+                url: queryURL,
+                method: 'GET'
+            }).done(function (response) {
+                // console.log(response);
+                //loop through the gifs available
+                for (var i = 0; i < response.data.length; i++) {
+                    var animalDiv = $('<div>');
+                    var rating = $('<p>').text("Rating: " + response.data[i].rating);
+                    var animalImage = $('<img>');
+                    animalImage.attr('src', response.data[i].images.fixed_height_still.url);
+                    animalDiv.append(rating);
+                    animalDiv.append(animalImage);
+                    $('#gifsDisplay').after(animalDiv);
+                }
+            })
+        });
+
+
+
+
+    </script>
+
+</body>
+
+</html>
