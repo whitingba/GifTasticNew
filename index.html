@@ -6,49 +6,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title>GifTastic</title>
+    <title>Things that make me laugh</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+    <div class="container-fluid">
+        <div class="row">
 
-    <button data-animal="Cat">Cat</button>
-    <button data-animal="Dog">Dog</button>
-    <button data-animal="Bird">Bird</button>
+            <div id="giphyButtons">
+                <button data-giphy="Cats and dogs" class="btn btn-primary">Cats & Dogs</button>
+                <button data-giphy="Bob's Burgers" class="btn btn-primary">Bob's Burgers</button>
+                <button data-giphy="Step Brothers" class="btn btn-primary">Step Brother's</button>
+                <button data-giphy="Adam Sandler" class="btn btn-primary">Adam Sandler</button>
+                <button data-giphy="Tommy Boy" class="btn btn-primary">Tommy Boy</button>
+                <button data-giphy="Dodgeball Movie" class="btn btn-primary">Dodgeball Movie</button>
+                <button data-giphy="Monty Python and the Holy Grail" class="btn btn-primary">Monty Python and the Holy
+                    Grail</button>
+                <button data-giphy="Brooklyn Nine-Nine" class="btn btn-primary">Brooklyn Nine-Nine</button>
+                <button data-giphy="Reading" class="btn btn-primary">Reading</button>
+                <button data-giphy="Good food" class="btn btn-primary">Good Food</button>
+                <button data-giphy="Pinky and the Brain" class="btn btn-primary">Pinky & The Brain</button>
+                <button data-giphy="The Office" class="btn btn-primary">The Office</button>
+                <button data-giphy="Melissa McCarthy" class="btn btn-primary">Melissa McCarthy</button>
+                <button data-giphy="Elf Movie" class="btn btn-primary">Elf Movie</button>
 
-    <div id="gifsDisplay"></div>
+            </div>
+        </div>
 
-    <script type="text/javascript">
+
+        <div class="row">
+            <div class="col-lg-9">
+                <div id="gifsDisplay"></div>
+            </div>
+
+            <div class="col-lg-3">
+                <div>
+                    <form>
+                        What makes you smile? <br>
+                        <input type="text" name="search" id="makeSmiles"><br>
+                        <input id="addGiphy" type="submit" name="submit" class="submitButton">
+                    </form>
+                </div>
+            </div>
+        </div>
 
 
-        //on click function so when buttons are clicked gifs show up 
-        $('button').on('click', function () {
-            var animal = $(this).data("animal");
-            // console.log(x);
-            var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + animal + "&api_key=4oXRtl5CmpcDy4GbORHP5OmJZfTqmZRO&limit=9";
 
-            $.ajax({
-                url: queryURL,
-                method: 'GET'
-            }).done(function (response) {
-                // console.log(response);
-                //loop through the gifs available
-                for (var i = 0; i < response.data.length; i++) {
-                    var animalDiv = $('<div>');
-                    var rating = $('<p>').text("Rating: " + response.data[i].rating);
-                    var animalImage = $('<img>');
-                    animalImage.attr('src', response.data[i].images.fixed_height_still.url);
-                    animalDiv.append(rating);
-                    animalDiv.append(animalImage);
-                    $('#gifsDisplay').after(animalDiv);
-                }
+        <script type="text/javascript">
+
+
+            //on click function so when buttons are clicked gifs show up 
+            $('button').on('click', function () {
+                var myGiphy = $(this).data("giphy");
+                $('#gifsDisplay').empty();
+                console.log($('#gifsDisplay').html)
+                // console.log(x);
+                var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + myGiphy + "&api_key=4oXRtl5CmpcDy4GbORHP5OmJZfTqmZRO&limit=10";
+
+                $.ajax({
+                    url: queryURL,
+                    method: 'GET'
+                }).done(function (response) {
+                    // console.log(response);
+                    //loop through the gifs available
+                    for (var i = 0; i < response.data.length; i++) {
+                        var giphyDiv = $('<div class="giphyDisplay">');
+                        var rating = $('<p class="text-info">').text("Rating: " + response.data[i].rating);
+                        var giphyImage = $('<img>');
+                        giphyImage.attr('src', response.data[i].images.fixed_height.url);
+                        giphyDiv.append(rating);
+                        giphyDiv.prepend(giphyImage);
+                        $('#gifsDisplay').append(giphyDiv);
+                    }
+                })
+            });
+
+            $('#addGiphy').on('click', function (event) {
+                event.preventDefault();
+
+                var smileWorthy = $('#makeSmiles').val().trim();
+
+
+
+
             })
-        });
 
 
 
 
-    </script>
+
+
+
+
+        </script>
 
 </body>
 
