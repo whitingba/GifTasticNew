@@ -18,7 +18,7 @@
         <div class="row">
 
             <div id="giphyButtons">
-                <button data-giphy="Cats and dogs" class="btn btn-primary">Cats & Dogs</button>
+                <button data-giphy="cats and dogs" class="btn btn-primary">Cats & Dogs</button>
                 <button data-giphy="Bob's Burgers" class="btn btn-primary">Bob's Burgers</button>
                 <button data-giphy="Step Brothers" class="btn btn-primary">Step Brother's</button>
                 <button data-giphy="Adam Sandler" class="btn btn-primary">Adam Sandler</button>
@@ -48,6 +48,7 @@
                     <form>
                         What makes you smile? <br>
                         <input type="text" name="search" id="makeSmiles"><br>
+                        <!-- <button id="addGiphy" class="submitButton">Submit</button> -->
                         <input id="addGiphy" type="submit" name="submit" class="submitButton">
                     </form>
                 </div>
@@ -60,41 +61,88 @@
 
 
             //on click function so when buttons are clicked gifs show up 
-            $('button').on('click', function () {
-                var myGiphy = $(this).data("giphy");
-                $('#gifsDisplay').empty();
-                console.log($('#gifsDisplay').html)
-                // console.log(x);
-                var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + myGiphy + "&api_key=4oXRtl5CmpcDy4GbORHP5OmJZfTqmZRO&limit=10";
+            var ButtonFunction = function () {
+                $('button').on('click', function () {
+                    //
+                    var myGiphy = $(this).data("giphy");
+                    console.log(this);
 
-                $.ajax({
-                    url: queryURL,
-                    method: 'GET'
-                }).done(function (response) {
-                    // console.log(response);
-                    //loop through the gifs available
-                    for (var i = 0; i < response.data.length; i++) {
-                        var giphyDiv = $('<div class="giphyDisplay">');
-                        var rating = $('<p class="text-info">').text("Rating: " + response.data[i].rating);
-                        var giphyImage = $('<img>');
-                        giphyImage.attr('src', response.data[i].images.fixed_height.url);
-                        giphyDiv.append(rating);
-                        giphyDiv.prepend(giphyImage);
-                        $('#gifsDisplay').append(giphyDiv);
-                    }
+                    $('#gifsDisplay').empty();
+
+                    var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + myGiphy + "&api_key=4oXRtl5CmpcDy4GbORHP5OmJZfTqmZRO&limit=10";
+
+                    $.ajax({
+                        url: queryURL,
+                        method: 'GET'
+                    }).done(function (response) {
+                        console.log(response);
+                        //loop through the gifs available
+                        for (var i = 0; i < response.data.length; i++) {
+                            //create a var for a div which the giphys will be displayed in 
+                            var giphyDiv = $('<div class="giphyDisplay">');
+                            //create a var for a paragraph tag which the rating will be displayed in 
+                            var rating = $('<p class="text-info">').text("Rating: " + response.data[i].rating);
+                            //create a var for an image tag which the giphy image will be displayed in
+                            var giphyImage = $('<img class="actualGif">');
+                            //set the attribute for my giphy image source, data-state, data-still, data-animate
+                            giphyImage.attr('src', response.data[i].images.fixed_height_still.url);
+                            giphyImage.attr('data-still', response.data[i].images.fixed_height_still.url);
+                            giphyImage.attr('data-animate', response.data[i].images.fixed_height.url);
+                            giphyImage.attr('data-state', 'still');
+                            //call the image tag and attach it to the giphyDiv
+                            giphyDiv.html(giphyImage);
+                            //call the rating and have it append to the bottom of the  giphyDiv
+                            giphyDiv.append(rating);
+                            //call the giphyDiv I set up in the last two and append it to the area I specified in my HTML
+                            $('#gifsDisplay').append(giphyDiv);
+
+
+
+                        }
+                        //call the animateFunction after gifs have loaded to the page
+                        animateFunction();
+                    })
                 })
-            });
+            }
 
+
+
+            //on-click event to take in user text
             $('#addGiphy').on('click', function (event) {
                 event.preventDefault();
+                var smileItem = $('#makeSmiles').val().trim();
 
-                var smileWorthy = $('#makeSmiles').val().trim();
+                newSmileButton = '<button data-giphy="' + smileItem + '" class="btn btn-primary">' + smileItem + '</button>'
 
-                <button data-giphy="Elf Movie" class="btn btn-primary">Elf Movie</button>
+                $('#giphyButtons').append(newSmileButton)
 
-
+                ButtonFunction();
             })
 
+
+
+            //animate gif function
+            animateFunction = function () {
+                //on-click function to animate the photo
+                $('.actualGif').on('click', function () {
+
+                    var state = $(this).attr("data-state");
+                    if (state === "still") {
+                        $(this).attr("src", $(this).attr("data-animate"));
+                        $(this).attr("data-state", "animate");
+                    } else {
+                        $(this).attr("src", $(this).attr("data-still"));
+                        $(this).attr("data-state", "still");
+                    }
+                })
+            };
+
+
+
+            $(document).ready(function () {
+                ButtonFunction();
+
+            })
 
 
 
