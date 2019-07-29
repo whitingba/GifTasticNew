@@ -9,7 +9,7 @@ var ButtonFunction = function () {
 
         $('#gifsDisplay').empty();
 
-        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + myGiphy + "&api_key=4oXRtl5CmpcDy4GbORHP5OmJZfTqmZRO&limit=10";
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + myGiphy + "&api_key=4oXRtl5CmpcDy4GbORHP5OmJZfTqmZRO&limit=10";
 
         $.ajax({
             url: queryURL,
